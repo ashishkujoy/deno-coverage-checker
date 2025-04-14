@@ -1,7 +1,9 @@
 {
   "name": "@ashishkujoy/deno-coverage-checker",
   "description": "A tool to fail build if coverage falls below threshold",
-  "entry": "main.ts",
+  "version": "0.0.1",
+  "license": "MIT",
+  "exports": "./main.ts",
   "tasks": {
     "dev": "deno run --watch main.ts"
   },
