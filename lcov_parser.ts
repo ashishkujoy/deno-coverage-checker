@@ -1,5 +1,4 @@
 import { Table } from "@sauber/table";
-import colors from "colors";
 
 type CoverageData = {
   title?: string;
