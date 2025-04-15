@@ -1,5 +1,5 @@
 import { parseArgs } from '@std/cli/parse-args';
-import { parseLcov, calculateCoverageSummary, formatCoverageSummary, checkThresholds, ThresholdConfig } from './lcov_parser.ts';
+import { parseLcov, calculateCoverageSummary, formatCoverageSummary, checkThresholds, type ThresholdConfig } from './lcov_parser.ts';
 
 const readThresholdFromFile = (filePath: string): ThresholdConfig => {
   try {
@@ -17,6 +17,7 @@ const mergeConfig = (
     lines: cliThreshold.lines ?? configFileThresholds.lines ?? 100,
     branches: cliThreshold.branches ?? configFileThresholds.branches ?? 100,
     functions: cliThreshold.functions ?? configFileThresholds.functions ?? 100,
+    perFile: cliThreshold.perFile ?? configFileThresholds.perFile ?? false, 
   };
 }
 
@@ -49,16 +50,18 @@ const main = async () => {
       configFile: '.denocoveragerc.json',
     }
   });
+
   const thresholds = getThresholds(args);
+
   const coverageStr = await collectCoverage();
   const coverage = calculateCoverageSummary(parseLcov(coverageStr));
 
-  // console.log(coverageStr);
+
   console.log(formatCoverageSummary(coverage));
   const result = checkThresholds(coverage, thresholds);
   const statusCode = result.passed ? 0 : 1;
   result.failures.forEach(line => console.error(line));
-  
+
   Deno.exit(statusCode);
 }
 
