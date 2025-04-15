@@ -1,7 +1,7 @@
 {
   "name": "@ashishkujoy/deno-coverage-checker",
-  "description": "A tool to fail build if coverage falls below threshold",
-  "version": "0.0.1",
+  "description": "A command-line tool that enforces code coverage thresholds for Deno projects. It fails the build if coverage falls below the specified thresholds.",
+  "version": "0.0.2",
   "license": "MIT",
   "exports": "./main.ts",
   "tasks": {
