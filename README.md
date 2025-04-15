@@ -14,6 +14,13 @@ A command-line tool that enforces code coverage thresholds for Deno projects. It
 
 Run in your Deno project directory:
 
+First run test with coverage enabled:
+
+```bash
+deno test --coverage
+```
+
+Then run the coverage checker:
 ```bash
 deno run -A jsr:@ashishkujoy/deno-coverage-checker
 ```
