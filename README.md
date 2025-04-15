@@ -1,4 +1,4 @@
-# Deno Coverage Guard
+# Deno Coverage Checker
 
 A command-line tool that enforces code coverage thresholds for Deno projects. It fails the build if coverage falls below the specified thresholds.
 
