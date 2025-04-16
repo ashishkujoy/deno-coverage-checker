@@ -40,12 +40,14 @@ const getThresholds = (args: Args): ThresholdConfig => {
   return mergeConfig({
     lines: args.lines,
     branches: args.branches,
-    functions: args.functions
+    functions: args.functions,
+    perFile: args.perFile,
   }, thresholdFromFile);
 }
 
 const main = async () => {
   const args = parseArgs(Deno.args, {
+    boolean: ["perFile"],
     default: {
       configFile: '.denocoveragerc.json',
     }
