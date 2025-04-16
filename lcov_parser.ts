@@ -159,9 +159,9 @@ export function calculateCoverageSummary(
 ): CoverageSummary {
   const summary: CoverageSummary = {
     total: {
-      lines: { total: 0, covered: 0, percentage: 0 },
-      functions: { total: 0, covered: 0, percentage: 0 },
-      branches: { total: 0, covered: 0, percentage: 0 },
+      lines: { total: 0, covered: 0, percentage: 100 },
+      functions: { total: 0, covered: 0, percentage: 100 },
+      branches: { total: 0, covered: 0, percentage: 100 },
     },
     files: {},
   };
