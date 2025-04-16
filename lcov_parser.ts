@@ -297,12 +297,17 @@ export function formatCoverageSummary(
   const table = new Table();
   table.theme = Table.roundTheme;
   table.headers = ["File", "Branch", "Line", "Function"];
-
+  const { total } = summary;
   table.rows = Object.entries(summary.files)
     .map(([file, fileSummary]) => {
       const shortFile = file.split("/").pop() || file;
       return [shortFile, ...formatCoverageMetricRow(fileSummary)];
     });
-
+  
+    table.rows.push([
+    "Total", 
+    ...formatCoverageMetricRow(total)
+  ]);
+  
   return table.toString();
 }
