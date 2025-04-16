@@ -44,14 +44,15 @@ Create a `.denocoveragerc.json` file in your project root:
   "lines": 90,
   "branches": 85,
   "functions": 95,
-  "perFile": true
+  "perFile": true,
+  "exclude": "src/app.ts"
 }
 ```
 
 ### 2. Command-line Options
 
 ```bash
-deno run -A jsr:@ashishkujoy/deno-coverage-checker --lines=90 --branches=85 --functions=95
+deno run -A jsr:@ashishkujoy/deno-coverage-checker --lines=90 --branches=85 --functions=95 --exclude=src/app.ts
 ```
 
 You can also specify a custom configuration file:
@@ -69,7 +70,7 @@ deno run -A jsr:@ashishkujoy/deno-coverage-checker --configFile=custom-config.js
 | `functions`  | Minimum percentage of functions that must be covered | 100                    |
 | `perFile`    | Whether to enforce thresholds on a per-file basis    | false                  |
 | `configFile` | Path to configuration file                           | `.denocoveragerc.json` |
-
+| `exclude`    | Comma-separated patterns of files to exclude         | undefined              |
 ## Example Output
 
 ```

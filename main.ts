@@ -1,7 +1,7 @@
 import { parseArgs } from '@std/cli/parse-args';
-import { parseLcov, calculateCoverageSummary, formatCoverageSummary, checkThresholds, type ThresholdConfig } from './lcov_parser.ts';
+import { parseLcov, calculateCoverageSummary, formatCoverageSummary, checkThresholds, type Config } from './lcov_parser.ts';
 
-const readThresholdFromFile = (filePath: string): ThresholdConfig => {
+const readThresholdFromFile = (filePath: string): Config => {
   try {
     return JSON.parse(Deno.readTextFileSync(filePath));
   } catch {
@@ -10,21 +10,26 @@ const readThresholdFromFile = (filePath: string): ThresholdConfig => {
 }
 
 const mergeConfig = (
-  cliThreshold: ThresholdConfig,
-  configFileThresholds: ThresholdConfig,
+  cliConfig: Config,
+  configFromFile: Config,
 ) => {
   return {
-    lines: cliThreshold.lines ?? configFileThresholds.lines ?? 100,
-    branches: cliThreshold.branches ?? configFileThresholds.branches ?? 100,
-    functions: cliThreshold.functions ?? configFileThresholds.functions ?? 100,
-    perFile: cliThreshold.perFile ?? configFileThresholds.perFile ?? false, 
+    lines: cliConfig.lines ?? configFromFile.lines ?? 100,
+    branches: cliConfig.branches ?? configFromFile.branches ?? 100,
+    functions: cliConfig.functions ?? configFromFile.functions ?? 100,
+    perFile: cliConfig.perFile ?? configFromFile.perFile ?? false,
+    exclude: cliConfig.exclude ?? configFromFile.exclude,
+    include: cliConfig.include ?? configFromFile.include,
   };
 }
 
 
-const collectCoverage = async () => {
+const collectCoverage = async (config: Config) => {
+  const args = ["coverage", "--lcov"];
+  if (config.exclude) args.push(`--exclude=${config.exclude}`);
+  if (config.include) args.push(`--include=${config.exclude}`);
   const coverageProcess = new Deno.Command("deno", {
-    args: ["coverage", "--lcov"],
+    args,
     stdout: "piped",
   }).spawn();
 
@@ -34,7 +39,7 @@ const collectCoverage = async () => {
 
 type Args = { [x: string]: any; _: Array<string | number>; };
 
-const getThresholds = (args: Args): ThresholdConfig => {
+const getConfig = (args: Args): Config => {
   const thresholdFromFile = readThresholdFromFile(args.configFile);
 
   return mergeConfig({
@@ -42,6 +47,8 @@ const getThresholds = (args: Args): ThresholdConfig => {
     branches: args.branches,
     functions: args.functions,
     perFile: args.perFile,
+    exclude: args.exclude,
+    include: args.include,
   }, thresholdFromFile);
 }
 
@@ -52,15 +59,14 @@ const main = async () => {
       configFile: '.denocoveragerc.json',
     }
   });
-
-  const thresholds = getThresholds(args);
-
-  const coverageStr = await collectCoverage();
+  const config = getConfig(args);
+  const coverageStr = await collectCoverage(config);
   const coverage = calculateCoverageSummary(parseLcov(coverageStr));
 
 
   console.log(formatCoverageSummary(coverage));
-  const result = checkThresholds(coverage, thresholds);
+
+  const result = checkThresholds(coverage, config);
   const statusCode = result.passed ? 0 : 1;
   result.failures.forEach(line => console.error(line));
 

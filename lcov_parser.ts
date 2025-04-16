@@ -32,11 +32,13 @@ type CoverageData = {
   };
 };
 
-export type ThresholdConfig = {
+export type Config = {
   lines?: number;
   functions?: number;
   branches?: number;
   perFile?: boolean;
+  exclude?: string;
+  include?: string;
 };
 
 type CoverageMetric = {
@@ -228,7 +230,7 @@ export function calculateCoverageSummary(
  */
 export function checkThresholds(
   summary: CoverageSummary,
-  thresholds: ThresholdConfig
+  thresholds: Config
 ): { passed: boolean; failures: string[] } {
   const failures: string[] = [];
 
