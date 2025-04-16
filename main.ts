@@ -57,8 +57,10 @@ const main = async () => {
     boolean: ["perFile"],
     default: {
       configFile: '.denocoveragerc.json',
+      perFile: undefined
     }
   });
+
   const config = getConfig(args);
   const coverageStr = await collectCoverage(config);
   const coverage = calculateCoverageSummary(parseLcov(coverageStr));
